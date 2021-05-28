@@ -1,0 +1,7 @@
+Flask
+gunicorn
+pandas
+temp
+openpyxl
+xlrd
+xlsxwriter
