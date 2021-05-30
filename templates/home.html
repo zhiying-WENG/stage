@@ -7,33 +7,57 @@
   <body>
     <style>
       body {
-        background: linear-gradient(rgb(250, 250, 253),rgb(177, 186, 228),rgb(250,250,250)) no-repeat;
+        background: linear-gradient(rgb(255, 255, 255),rgb(177, 186, 228),rgb(255,255,255)) no-repeat;
         margin-left: 10px;
         margin-right: 10px;
         background-color: rgb(255, 255, 255);
-        line-height: 50px;
+        line-height: 30px;
         vertical-align:bottom;
         padding: 1%;
         z-index:1;
-
+        font-family: Arial, Helvetica, sans-serif;
       }
       h3 {
         font-size: 23px;
       }
-      .button2 {
+      h4 {
+        font-size: 18px;
+      }
+      img{
+        position: absolute;
+        right:7px;
+        top: 10px;
+        width: 120px;
+      }
+      .form {
+        line-height: 15px
+      }
+      .button1 {
         border-radius: 15px;
         background-color:rgb(30, 30, 172);
         color:white;
-        line-height: 20px;
+        padding-left: 23px;
+        padding-right: 23px;
+        line-height: 25px;
+      }
+      .button1:hover {
+        background-color:rgb(27, 27, 100);
+        cursor: pointer;
+      }
+      .button2 {
+        border-radius: 15px;
+        background-color:rgb(182, 35, 35);
+        color:white;
+        line-height: 15px;
       }
       .button2:hover {
-        background-color:rgb(27, 27, 100);
+        background-color:rgb(100, 27, 27);
         cursor: pointer;
       }
     </style>
 
 <!-- Contenu principal -->
-    <h1>Données brutes à nettoyer</h1>
+    <h1>Données brutes à charger pour nettoyage</h1>
 
     {%if err%}
     <h2 style="color:rgb(161, 6, 6)">Warning: {{err}}</h2>
@@ -42,36 +66,115 @@
     {%if e%}
     <h2 style="color:rgb(161, 6, 6)">Warning: {{e}}</h2>
     {%endif%}
-    <div style="line-height: 25px">
+    <img src="../static/images/logo.png" alt="logo"/>
+    <div class="form">
       <form action="/uploader" method="post" enctype = "multipart/form-data">
-        <p><input type = "file" name = "file" /></p><br>
-        <h2>Choix du nom des colonnes:</h2>
         <p>
-          <strong>Univers: </strong> <input type = "text" name = "cam" />
-          <strong>Lead: </strong> <input type = "text" name = "lead" />
-          <strong>Coût: </strong> <input type = "text" name = "cout" />
-        </p>
-        <p>
-          <strong>Clics: </strong> <input type = "text" name = "clics" />
-          <strong>Impression: </strong> <input type = "text" name = "impr" />
-          <strong>PI: </strong> <input type = "text" name = "pi" />
+          <input type = "file" name = "file" accept=".xlsx, .xls"/>
+          <select name="pmu">
+            <option value="ispmu" selected>PMU</option>
+            <option value="nopmu">Hors PMU</option>
+          </select>
+ 
         </p><br>
-        <h3>Filtre par campagne:</h3>
+        
+        <fieldset>
+          <legend><h2>Faire correspondre les nom des colonnes:</h2></legend>
+          <p>
+            <strong>Campagne/Dimension/Univers: </strong><input type = "text" name = "cam" />
+            <strong>Lead: </strong> <input type = "text" name = "lead" />
+            <strong>Coût: </strong> <input type = "text" name = "cout" />
+          </p>
+          <p>
+            <strong>Impression: </strong> <input type = "text" name = "impr" />
+            <strong>Clics: </strong> <input type = "text" name = "clics" />           
+            <strong>PI: </strong> <input type = "text" name = "pi" />
+          </p>
+ 
+          <fieldset>
+            <legend><h4>Ajouter des colonnes si besoin:</h4></legend>
+              Nouvelle colonne 1: <input type = "text" name = "n1" />
+              <select name="agg1">
+                <option value="sum" selected>sum</option>
+                <option value="mean">mean</option>
+                <option value="max">max</option>
+                <option value="min">min</option>
+              </select>
+              Nouvelle colonne 2: <input type = "text" name = "n2" />
+              <select name="agg2">
+                <option value="sum" selected>sum</option>
+                <option value="mean">mean</option>
+                <option value="max">max</option>
+                <option value="min">min</option>
+              </select>
+              Nouvelle colonne 3: <input type = "text" name = "n3" />
+              <select name="agg3">
+                <option value="sum" selected>sum</option>
+                <option value="mean">mean</option>
+                <option value="max">max</option>
+                <option value="min">min</option>
+              </select><br><br>
+              Nouvelle colonne 4: <input type = "text" name = "n4" />
+              <select name="agg4">
+                <option value="sum" selected>sum</option>
+                <option value="mean">mean</option>
+                <option value="max">max</option>
+                <option value="min">min</option>
+              </select>
+              Nouvelle colonne 5: <input type = "text" name = "n5" />
+              <select name="agg5">
+                <option value="sum" selected>sum</option>
+                <option value="mean">mean</option>
+                <option value="max">max</option>
+                <option value="min">min</option>
+              </select>
+              Nouvelle colonne 6: <input type = "text" name = "n6" />
+              <select name="agg6">
+                <option value="sum" selected>sum</option>
+                <option value="mean">mean</option>
+                <option value="max">max</option>
+                <option value="min">min</option>
+              </select>
+          </fieldset><br>
+         
+          <fieldset>
+            <legend><h4>Grouper (groupby) par colonne: </h4></legend>
+            
+              <strong>Choix du groupby en fonction du besoin:</strong>
+              <input type="radio" name="group" value="ncu"> Nouvelle colonne + Univers ?
+              <input type="radio" name="group" value="unc">Univers + Nouvelle colonne ?
+              <input type="radio" name="group" value="nc"> Nouvelle colonne ?
+              <input type="radio" name="group" value="u" checked> Univers (le choix par défaut) ?
+              <br><br>
+              Nouvelle colonne: <input type = "text" name = "gs" />
+            
+          </fieldset><br>
+        </fieldset><br>
+
+      
+        <fieldset>
+          <legend><h3>Filtre par type de campagne ou de lead:</h3></legend>
+          <p>
+            element 1: <input type = "text" name = "u1" />
+            element 2: <input type = "text" name = "u2" />
+            element 3: <input type = "text" name = "u3" />
+            element 4: <input type = "text" name = "u4" />
+          </p>
+          <p>
+            element 5: <input type = "text" name = "u5" />         
+            element 6: <input type = "text" name = "u6" />
+            element 7: <input type = "text" name = "u7" />
+            element 8: <input type = "text" name = "u8" />
+          </p>
+          <p>
+            element 9: <input type = "text" name = "u9" />
+            element 10: <input type = "text" name = "u10" />
+          </p><br>
+        </fieldset><br>
         <p>
-          <strong>U1: </strong> <input type = "text" name = "u1" />
-          <strong>U2: </strong> <input type = "text" name = "u2" />
-          <strong>U3: </strong> <input type = "text" name = "u3" />
-          <strong>U4: </strong> <input type = "text" name = "u4" />
-          <strong>U5: </strong> <input type = "text" name = "u5" />
+          <input class="button1" type = "submit"/>
+          <input class="button2" type = "reset"/>
         </p>
-        <p>
-          <strong>U6: </strong> <input type = "text" name = "u6" />
-          <strong>U7: </strong> <input type = "text" name = "u7" />
-          <strong>U8: </strong> <input type = "text" name = "u8" />
-          <strong>U9: </strong> <input type = "text" name = "u9" />
-          <strong>U10: </strong> <input type = "text" name = "u10" />
-        </p><br>
-        <p><input class="button2" type = "submit"/></p>
       </form>
     </div>
   </body>

@@ -1,6 +1,7 @@
 Flask
 gunicorn
 pandas
+numpy
 temp
 openpyxl
 xlrd
