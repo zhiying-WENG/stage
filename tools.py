@@ -153,15 +153,18 @@ def macro_net(df,cam,lead,cout,clics,impr,pi,pmu,n1,n2,n3,n4,n5,n6,agg1,agg2,agg
         return x
     df[pi]=df[pi].apply(SearchImpr)
 
-    # df["Requêtes"]=round(df[impr]/df[pi],2) quand il n'y a pas de nan
-    # quand pi=nan impression/nan compte directement impression
-    l_r=[]
+    # quand pi=nan impression compte compte comment 0
+    l_imprnonan=[]
     for i in range(len(df)):
         if df[pi][i]>0:
-            l_r.append(round(df[impr][i]/df[pi][i],2))
+            l_imprnonan.append(df[impr][i])
         else:
-            l_r.append(df[impr][i])
-    df["Requêtes"]=l_r
+            l_imprnonan.append(0)
+    
+    df["imprnonan"]=l_imprnonan
+    df["Requêtes"]=df["imprnonan"]/df[pi]
+    dictgroupby["imprnonan"]="sum"
+    
     # renomer les colonnes
     df.rename(columns={lead: "Lead",cout:"Coût",clics:"Clics",impr:"impression",pi:"PI estimé"},inplace=True)
     
@@ -171,12 +174,14 @@ def macro_net(df,cam,lead,cout,clics,impr,pi,pmu,n1,n2,n3,n4,n5,n6,agg1,agg2,agg
     # les liste de  colonnes on veut garder quand groupby:  ["Coût","Lead","Clics","impression","Requêtes"]+ladd
     # on groupby et calculer
     dfgu=df.groupby(lgroupby).agg(dictgroupby)
-    dfgu["PI estimé"]=round(dfgu.impression/dfgu["Requêtes"],2)
-    dfgu["CPA"]=round(dfgu.Coût/dfgu.Lead,2)
-    dfgu["CPC estimé"]=round(dfgu.Coût/dfgu.Clics ,2)
-    dfgu["CTR estimé"]=round(dfgu.Clics/dfgu.impression ,2)
-    dfgu["TTR estimé"]=round(dfgu.Lead/dfgu.Clics ,4)
+    dfgu["PI estimé"]=dfgu.imprnonan/dfgu["Requêtes"]
+    dfgu["CPA"]=dfgu.Coût/dfgu.Lead
+    dfgu["CPC estimé"]=dfgu.Coût/dfgu.Clics
+    dfgu["CTR estimé"]=dfgu.Clics/dfgu.impression
+    dfgu["TTR estimé"]=dfgu.Lead/dfgu.Clics
+    dfgu["Requêtes"]=dfgu.impression/dfgu["PI estimé"]
     dfgu=dfgu[lfinal]
+ 
     
     # excel avec les donnes déjà nettoyer
     out = io.BytesIO()
